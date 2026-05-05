@@ -1,61 +1,70 @@
-# Arduino FSM – Button Controlled LED
+# Arduino FSM Projects – ATmega328P
 
-This project demonstrates a **Finite State Machine (FSM)** implementation using Arduino.
-
-A single push button is used to control multiple LED behaviors using **short press**, **long press**, and **non-blocking timing**.
+A collection of **Finite State Machine (FSM)** implementations on Arduino,
+built using direct register manipulation and non-blocking timing.
 
 ---
 
-## Features
+## Projects
+
+### 1. Button Controlled LED (`button-led-fsm/`)
+A single push button controls multiple LED behaviors using short and long press detection.
+
+**Features**
 - Short press toggles LED ON/OFF
 - Long press switches to blinking mode
 - Long press again exits blinking mode
 - Button debouncing without delay()
 - Non-blocking timing using millis()
 
+**FSM States**
+- **OFF** – LED is OFF
+- **ON** – LED is ON
+- **MODE** – LED blinks continuously
+
+**Wiring**
+- Button → Pin 9 (INPUT_PULLUP)
+- LED → Pin 7 (through 220Ω resistor to GND)
+
 ---
 
-## FSM States
-- **OFF** – LED is OFF  
-- **ON** – LED is ON  
-- **MODE** – LED blinks continuously  
+### 2. Traffic Light Controller (`pedestrian-button/`)
+A traffic light FSM with a pedestrian request button using hardware interrupts.
+
+**Features**
+- Full traffic light sequencing (RED → RED+YELLOW → GREEN → YELLOW)
+- Pedestrian button triggers early green-to-yellow transition
+- INT0 hardware interrupt for button handling
+- Direct port manipulation (PORTB/DDRD/EICRA)
+- Non-blocking timing using millis()
+
+**FSM States**
+- **RED** – Stop
+- **RED+YELLOW** – Prepare to go
+- **GREEN** – Go (shortened if pedestrian waiting)
+- **YELLOW** – Prepare to stop
+
+**Wiring**
+- Red LED → PB3
+- Yellow LED → PB4
+- Green LED → PB5
+- Pedestrian Button → PD2 (INT0, INPUT_PULLUP)
 
 ---
 
 ## Concepts Used
 - Finite State Machine (FSM)
 - enum for state management
+- Hardware interrupts (INT0)
+- Direct register manipulation
 - Button debouncing
-- Short vs long press detection
 - millis() based non-blocking timing
 
 ---
 
 ## Hardware Required
-- Arduino Uno / Nano
-- Push button
-- LED
-- 220Ω resistor
+- Arduino Uno / Nano (ATmega328P)
+- Push buttons
+- LEDs (Red, Yellow, Green)
+- 220Ω resistors
 - Breadboard & jumper wires
-
----
-
-## Wiring
-- Button → Pin 9 (INPUT_PULLUP)
-- LED → Pin 7 (through resistor to GND)
-
----
-
-## How It Works
-The button press duration is measured:
-- **< 500 ms** → short press
-- **> 500 ms** → long press
-
-Based on the press type, the FSM transitions between states and controls the LED behavior.
-
----
-
-## Future Improvements
-- Add multiple LEDs
-- Add serial debugging
-- Extend FSM with sensors
